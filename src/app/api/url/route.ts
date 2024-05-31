@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({}, { status: 400 });
     }
 
-    return NextResponse.json({ shortUrl: res[0].originalUrl }, { status: 200 });
+    return NextResponse.json({ originalUrl: res[0].originalUrl }, { status: 200 });
 }
 
 export async function POST(req: NextRequest) {
