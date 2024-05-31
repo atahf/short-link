@@ -1,113 +1,139 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
+import toast from "react-hot-toast";
+
+const urlPattern =
+    /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z0-9\u00a1-\uffff][a-z0-9\u00a1-\uffff_-]{0,62})?[a-z0-9\u00a1-\uffff]\.)+(?:[a-z\u00a1-\uffff]{2,}\.?))(?::\d{2,5})?(?:[/?#]\S*)?$/;
 
 export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:size-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const [url, setUrl] = useState<string>("");
+    const [sUrl, setSUrl] = useState<string | null>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-      <div className="relative z-[-1] flex place-items-center before:absolute before:h-[300px] before:w-full before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 sm:before:w-[480px] sm:after:w-[240px] before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+    async function handleForm(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:w-full lg:max-w-5xl lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+        if (url.length === 0) {
+            toast.error("URL is empty!");
+            return;
+        }
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+        if (url.length > 512) {
+            toast.error("URL is too large!");
+            return;
+        }
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-sm opacity-50">
-            Explore starter templates for Next.js.
-          </p>
-        </a>
+        if (!urlPattern.test(url)) {
+            toast.error("URL is not valid!");
+            return;
+        }
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className="mb-3 text-2xl font-semibold">
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className="m-0 max-w-[30ch] text-balance text-sm opacity-50">
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+        setIsLoading(true);
+
+        const postOptions = {
+            method: "POST",
+            body: JSON.stringify({ url }),
+        };
+        await fetch("/api/url", postOptions)
+            .then((res) => {
+                if (res.ok) {
+                    return res.json();
+                }
+                throw Error(res.statusText);
+            })
+            .then((data) => {
+                setSUrl(`${window.location.origin}/${data.shortUrl}`);
+                setIsLoading(false);
+                toast.success("Short URL generated!");
+            })
+            .catch((err) => {
+                setIsLoading(false);
+                toast.error(err.message);
+            });
+    }
+
+    function handleCopy() {
+        if (sUrl) {
+            navigator.clipboard.writeText(sUrl)
+            toast.success("Copied!");
+        }
+    }
+
+    return (
+        <main className="flex-row items-center justify-center w-fit lg:w-full min-h-screen relative">
+            <div className="flex items-center justify-center w-full min-h-screen mx-auto">
+                <video
+                    autoPlay={true}
+                    loop
+                    muted={true}
+                    playsInline={true}
+                    className="aspect-auto"
+                    src="https://cdn.pixabay.com/video/2016/08/24/4788-180289892_large.mp4"
+                />
+            </div>
+            <div className="absolute inset-0 w-fit lg:w-full pt-16 top-1/4 mx-auto items-center justify-center">
+                <div className="max-w-lg mx-auto w-fit lg:w-full items-center justify-center rounded-2xl p-6 bg-gray-800 bg-opacity-85">
+                    <h1 className="mb-6 font-semibold cursor-default select-none text-transparent items-center justify-center text-center text-4xl sm:text-3xl lg:text-6xl bg-clip-text bg-gradient-to-l from-blue-600 to-green-600">
+                        SHORT LINK
+                    </h1>
+
+                    <form
+                        className="max-w-lg mx-auto w-fit lg:w-full flex items-center justify-center space-x-0 p-4"
+                        onSubmit={handleForm}
+                    >
+                        <input
+                            type="search"
+                            id="search-dropdown"
+                            className="p-2.5 w-full text-sm rounded-s-lg border-s-2 border focus:ring-blue-500 bg-gray-700 border-s-gray-700 border-gray-600 placeholder-gray-400 text-white focus:border-blue-500"
+                            placeholder="Enter the URL here"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                            minLength={1}
+                            maxLength={512}
+                        />
+                        <button
+                            type="submit"
+                            disabled={isLoading}
+                            className={`p-2.5 w-fit text-nowrap text-sm font-medium h-full text-white cursor-pointer select-none rounded-e-lg border border-blue-700 ${
+                                isLoading
+                                    ? "bg-blue-300"
+                                    : "focus:ring-4 focus:outline-none bg-blue-600 hover:bg-blue-700 focus:ring-blue-800"
+                            }`}
+                        >
+                            <span>Shorten URL</span>
+                        </button>
+                    </form>
+
+                    {sUrl && (
+                        <div className="flex items-center justify-center w-fit lg:w-full mt-16 mx-auto relative p-4">
+                            <textarea
+                                placeholder="a"
+                                className="col-span-6 pr-16 w-full resize-none border text-wrap text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-gray-400"
+                                value={sUrl}
+                                disabled
+                                readOnly
+                            />
+                            <button
+                                type="button"
+                                onClick={handleCopy}
+                                className="absolute end-2 top-1/2 mr-4 -translate-y-1/2 text-gray-400 hover:bg-gray-800 rounded-lg p-2 inline-flex items-center justify-center"
+                            >
+                                <span>
+                                    <svg
+                                        className="w-3.5 h-3.5"
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="currentColor"
+                                        viewBox="0 0 18 20"
+                                    >
+                                        <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2Zm-3 14H5a1 1 0 0 1 0-2h8a1 1 0 0 1 0 2Zm0-4H5a1 1 0 0 1 0-2h8a1 1 0 1 1 0 2Zm0-5H5a1 1 0 0 1 0-2h2V2h4v2h2a1 1 0 1 1 0 2Z" />
+                                    </svg>
+                                </span>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
+        </main>
+    );
 }

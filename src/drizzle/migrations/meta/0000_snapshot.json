@@ -1,0 +1,46 @@
+{
+  "id": "91d2c66a-f6f1-43bb-86be-6a570e80b6c9",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.short-url_url": {
+      "name": "short-url_url",
+      "schema": "",
+      "columns": {
+        "shortUrl": {
+          "name": "shortUrl",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "originalUrl": {
+          "name": "originalUrl",
+          "type": "varchar(512)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "short-url_url_originalUrl_unique": {
+          "name": "short-url_url_originalUrl_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "originalUrl"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
