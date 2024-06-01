@@ -42,7 +42,7 @@ export default function Home() {
                 throw Error(res.statusText);
             })
             .then((data) => {
-                setSUrl(`${window.location.origin}/${data.originalUrl}`);
+                setSUrl(`${window.location.origin}/${data.shortUrl}`);
                 setIsLoading(false);
                 toast.success("Short URL generated!");
             })
